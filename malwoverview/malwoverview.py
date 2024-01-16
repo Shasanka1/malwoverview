@@ -96,7 +96,6 @@ H = []
 final=''
 ffpname2 = ''
 repo2 = ''
-global polyswarm
 
 def requestHAAPI():
 
