@@ -3586,7 +3586,7 @@ def haushashsearch(hashx, haus):
 
         if ((len(hashx)==64)):
             params = {"sha256_hash": hashx}
-        hausresponse = requests.post(haus, data=params)
+        hausresponse = requests.post(haus, data=params, timeout=60)
         haustext = json.loads(hausresponse.text)
 
         if ((haustext.get('md5_hash') is None) and (haustext.get('sha256_hash') is None)):
