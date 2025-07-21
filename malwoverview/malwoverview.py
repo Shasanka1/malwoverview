@@ -187,26 +187,26 @@ def ftype(filename):
 def sha256hash(fname):
 
     BSIZE = 65536
-    hnd = open(fname, 'rb')
-    hash256 = hashlib.sha256()
-    while True:
-        info = hnd.read(BSIZE)
-        if not info:
-            break
-        hash256.update(info)
+    with open(fname, 'rb') as hnd:
+        hash256 = hashlib.sha256()
+        while True:
+            info = hnd.read(BSIZE)
+            if not info:
+                break
+            hash256.update(info)
     return hash256.hexdigest()
 
 
 def md5hash(fname):
 
     BSIZE = 65536
-    hnd = open(fname, 'rb')
-    hashmd5 = hashlib.md5()
-    while True:
-        info = hnd.read(BSIZE)
-        if not info:
-            break
-        hashmd5.update(info)
+    with open(fname, 'rb') as hnd:
+        hashmd5 = hashlib.md5()
+        while True:
+            info = hnd.read(BSIZE)
+            if not info:
+                break
+            hashmd5.update(info)
     return hashmd5.hexdigest()
 
 
@@ -4637,18 +4637,17 @@ def triage_sample_submit(triagex, triage):
         print((mycolors.reset + "TRIAGE SAMPLE SUBMIT REPORT".center(80)), end='')
         print((mycolors.reset + "".center(28)), end='')
         print("\n" + (80*'-').center(40))
+        with open(triagex,'rb') as myfile:
+            mydata = {
+                'kind': 'file',
+                'interactive': False,
+            }
 
-        myfile = open(triagex,'rb')
-        mydata = {
-            'kind': 'file',
-            'interactive': False,
-        }
-
-        filename = os.path.basename(triagex)
-        mybody, content_type = encode_multipart_formdata({
-            '_json': json.dumps(mydata),
-            'file': (filename, myfile),
-        })
+            filename = os.path.basename(triagex)
+            mybody, content_type = encode_multipart_formdata({
+                '_json': json.dumps(mydata),
+                'file': (filename, myfile),
+            })
 
         req = Request('POST', triage + 'samples', data=mybody, headers={"Content-Type": content_type, "Authorization": "Bearer " + TRIAGEAPI})
         requestsession = requests.Session( )
